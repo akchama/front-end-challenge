@@ -1,8 +1,9 @@
 import { Container } from 'react-bootstrap';
 import logo from '../logo.png'
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Button } from 'react-bootstrap';
 
-function Nav() {
+const Nav = ({userName, userSurname, Logout}) => {
+
     return (
         <div>
             <Navbar bg="dark" variant="dark">
@@ -24,9 +25,19 @@ function Nav() {
                 </Navbar.Text>
             </Navbar.Collapse>
             <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text>
-                Welcome, Mark Otto
-                </Navbar.Text>
+                {
+                    (userName != "") ? 
+                    <div>
+                        <Navbar.Text>
+                            Welcome, {userName} {userSurname}
+                        </Navbar.Text>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" onClick={Logout}>Logout</button>
+                    </div>
+                    : 
+                    <Navbar.Text>
+                        Please login!
+                    </Navbar.Text>
+                }
             </Navbar.Collapse>
             </Container>
         </Navbar>

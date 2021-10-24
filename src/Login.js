@@ -1,40 +1,31 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router';
 
-function Login() {
+const LoginForm = ({Login}) => {
 
-    const [name, setName] = useState(" ");
-    const [surname, setSurname] = useState(" ");
-    let history = useHistory();
-
-    useEffect(() => {
-        localStorage.setItem("name", JSON.stringify(name));
-        localStorage.setItem("surname", JSON.stringify(surname));
-      }, [name, surname]);
-
+    const [details, setDetails] = useState({name: "", surname: ""})
+    
     const handleLogin = (e) => {
-        e.preventDefault();
-        history.push('/home')
+        Login(details);
     }
 
     return (
-        <div class="container">
-            <div id="login-row" class="row justify-content-center align-items-center">
+        <div className="container">
+            <div id="login-row" className="row justify-content-center align-items-center">
                 <div className="col-sm-3">
                     <form onSubmit={handleLogin}>
-                        <h3>Hesap Oluştur</h3>
+                        <h3>SignIn</h3>
                         <div className="form-group">
-                            <label>İsim</label>
-                            <input type="text" className="form-control" placeholder="İsminizi giriniz" onChange={(event) => setName(event.target.value)} />
+                            <label>Name</label>
+                            <input type="text" className="form-control" placeholder="Enter your name..." onChange={(event) => setDetails({...details, name: event.target.value}) } value={details.name} />
                         </div>
 
                         <div className="form-group">
-                            <label>Soyisim</label>
-                            <input type="text" className="form-control" placeholder="Şifrenizi giriniz" onChange={(event) => setSurname(event.target.value)} />
+                            <label>Surname</label>
+                            <input type="text" className="form-control" placeholder="Enter your surname..." onChange={(event) => setDetails({...details, surname: event.target.value})} value={details.surname}/>
                         </div>
 
-                        <button type="submit" className="btn btn-dark btn-lg btn-block">Kayıt ol</button>
+                        <button type="submit" className="btn btn-dark btn-lg btn-block">Register</button>
                     </form>
                 </div>
             </div>
@@ -42,4 +33,4 @@ function Login() {
     )
 }
 
-export default withRouter(Login);
+export default LoginForm;

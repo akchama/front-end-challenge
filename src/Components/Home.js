@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../App.css';
 import { Route, Redirect } from 'react-router-dom';
 
-function Home(props) {
+const Home = (props) => {
 
     const [currencyOptions, setCurrencyOptions] = useState([])
     console.log(currencyOptions);
@@ -14,19 +14,20 @@ function Home(props) {
       url: 'https://v6.exchangerate-api.com/v6/e3fd651f3e38d8ee70be0677/codes',
       headers: { }
     };
-  
+
     useEffect(() => {
         axios(config)
-          .then(function (response) {
-            setCurrencyOptions(response.data.supported_codes)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            .then(function (response) {
+                setCurrencyOptions(response.data.supported_codes)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }, [])
 
-    const isLoggedIn = props.isLoggedIn;
-    if (isLoggedIn) {
+    const [loggedIn, setLoggedIn] = useState(true);
+
+    if (loggedIn) {
         return (
             <div id="searchbar">
                 <SearchBar placeholder="Bir para birimi seçin..." data={currencyOptions}/>
@@ -34,7 +35,10 @@ function Home(props) {
         )
     }
     return (
-        <Redirect to="/login" />
+        <Redirect to={{
+            pathname: '/login',
+            state: {loggedIn: loggedIn}
+        }}/>
     )
 }
 
