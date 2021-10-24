@@ -1,8 +1,7 @@
-body {
+#searchbar {
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     text-align: center;
 }
@@ -21,4 +20,8 @@ h1 {
 
 select {
     margin-left: .5rem;
+}
+
+#navbarWorth {
+    color: rgb(255, 255, 255);
 }

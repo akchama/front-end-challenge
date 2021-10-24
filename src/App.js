@@ -1,36 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import axios from 'axios';
-import { Jumbotron } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css' 
-import SearchBar from './Components/SearchBar';
+import Nav from './Components/Navbar.js'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './Components/Home';
+import Login from './Login';
+import Register from './Register';
+import { Redirect } from 'react-router';
 
 function App() {
 
-  const [currencyOptions, setCurrencyOptions] = useState([])
-  console.log(currencyOptions);
-
-
-  var config = {
-    method: 'get',
-    url: 'https://v6.exchangerate-api.com/v6/e3fd651f3e38d8ee70be0677/codes',
-    headers: { }
-  };
-
-  useEffect(() => {
-      axios(config)
-        .then(function (response) {
-          setCurrencyOptions(response.data.supported_codes)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-  }, [])
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <>
-      <SearchBar placeholder="Bir para birimi seçin..." data={currencyOptions} />
-    </>
+    <Router>
+      <div className="App">
+          <Nav />
+          <Switch>
+            <Route path="/register" component={Register} />
+            <Home isLoggedIn={loggedIn} path="/" exact component={Home} />
+            <Route path="/login" component={Login} />
+          </Switch>
+      </div>
+    </Router>
   );
 }
 
