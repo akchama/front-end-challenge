@@ -2,8 +2,6 @@
 
 Author: Abdullah Akçam
 
-<img src='https://github.com/sanderhelleso/smartCarChallenge/blob/master/client/public/img/screenshots/video.gif' alt='GIF of application'>
-
 ## Features
 
 <ul>
