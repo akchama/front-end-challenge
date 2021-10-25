@@ -3,27 +3,37 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css' 
 import Nav from './Components/Navbar.js'
 import Home from './Components/Home';
-import LoginForm from './Login';
+import LoginForm from './Components/Login';
 
 function App() {
+
+	const [login, setLogin] = useState(() => {
+		const savedName = localStorage.getItem("name");
+		const initValueName = JSON.parse(savedName);
+		if (initValueName == "" || initValueName == null)
+			return false;
+		return true;
+	});
 
 	const [user, setUser] = useState(() => {
 		const savedName = localStorage.getItem("name");
 		const initValueName = JSON.parse(savedName);
 		const savedSurname = localStorage.getItem("surname");
-		const initValueSurame = JSON.parse(savedSurname);
-		return { name: initValueName, surname: initValueSurame };
-	})
-
-	const [login, setLogin] = useState(true);
+		const initValueSurname = JSON.parse(savedSurname);
+		const savedWorth = localStorage.getItem("worth");
+		const initValueWorth = JSON.parse(savedWorth);
+		return { name: initValueName, surname: initValueSurname, worth: initValueWorth };
+	});
 
 	const Login = (details) => {
 		localStorage.setItem("name", JSON.stringify(details.name));
     	localStorage.setItem("surname", JSON.stringify(details.surname));
+		localStorage.setItem("worth", JSON.stringify(10000))
 		console.log('Logged in!' + details)
 		setUser({
 			name: details.name,
-			surname: details.surname
+			surname: details.surname,
+			worth: 10000
 		})
 		setLogin(true);
 	}
@@ -31,13 +41,18 @@ function App() {
 	const LogoutHandler = (e) => {
 		localStorage.removeItem("name");
     	localStorage.removeItem("surname");
-		setUser({ name: "", surname: ""})
+		localStorage.removeItem("worth")
+		setUser({ name: "", surname: "", worth: ""})
 		setLogin(false);
+	}
+
+	const WorthHandler = (e) => {
+		setUser({...user, worth: user.worth - e.target.value})
 	}
 
 	return (
 		<div className="App">
-			<Nav userName={user.name} userSurname={user.surname} Logout={(e) => LogoutHandler(e)}/>
+			<Nav userName={user.name} userSurname={user.surname} Logout={(e) => LogoutHandler(e)} userWorth={user.worth} loggedIn={login}/>
 			{(user.name != null && login) ? <Home /> : <LoginForm Login={Login}/>}
 		</div>
 	);

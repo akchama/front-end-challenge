@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 import logo from '../logo.png'
 import { Navbar, Button } from 'react-bootstrap';
 
-const Nav = ({userName, userSurname, Logout}) => {
+const Nav = ({userName, userSurname, Logout, userWorth, loggedIn}) => {
 
     return (
         <div>
@@ -20,13 +20,21 @@ const Nav = ({userName, userSurname, Logout}) => {
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text id="navbarWorth">
-                Total Worth: $14,000
-                </Navbar.Text>
+                {
+                    (loggedIn) ?
+                    <div>
+                        <Navbar.Text id="navbarWorth">
+                        Total Worth: ${userWorth}
+                        </Navbar.Text>
+                    </div>
+                    :
+                    <Navbar.Text id="navbarWorth">
+                    </Navbar.Text>
+                }
             </Navbar.Collapse>
             <Navbar.Collapse className="justify-content-end">
                 {
-                    (userName != "") ? 
+                    (loggedIn) ? 
                     <div>
                         <Navbar.Text>
                             Welcome, {userName} {userSurname}

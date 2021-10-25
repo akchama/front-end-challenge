@@ -4,9 +4,11 @@ import axios from 'axios';
 import '../App.css';
 import { Route, Redirect } from 'react-router-dom';
 
-const Home = (props) => {
+const Home = () => {
 
     const [currencyOptions, setCurrencyOptions] = useState([])
+    const [loggedIn, setLoggedIn] = useState(true);
+
     console.log(currencyOptions);
   
     var config = {
@@ -25,12 +27,10 @@ const Home = (props) => {
             });
     }, [])
 
-    const [loggedIn, setLoggedIn] = useState(true);
-
     if (loggedIn) {
         return (
             <div id="searchbar">
-                <SearchBar placeholder="Bir para birimi seçin..." data={currencyOptions}/>
+                <SearchBar placeholder="Start typing a currency..." data={currencyOptions}/>
             </div>
         )
     }
