@@ -15,6 +15,9 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     const [amount, setAmount] = useState("");
     const [currencies, setCurrencies] = useState([])
     const [lastUpdate, setLastUpdate] = useState("")
+    const [checkedState, setCheckedState] = useState(
+        new Array(currencies.length).fill(false)
+      );
 
     var config = {
         method: 'get',
@@ -94,19 +97,27 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
 
     }
 
+    const handleOnChange = (index) => {
+        setCheckedState(
+            new Array(currencies.length).fill(false)
+          );
+    }
+
     const renderCurrency = (currency, index) => {
         return (
             <tr key={index}>
             <td>
             <Form>
-            {['checkbox'].map((type) => (
-                <div key={`default-${type}`} className="mb-3">
-                <Form.Check 
-                    type={type}
-                    id={`default-${type}`}
+                <div key={`default-${currency}`} className="mb-3">
+                <Form.Check
+                    className="currencyCheckBox"
+                    onChange={() => handleOnChange(index)}
+                    type='checkbox'
+                    checked={checkedState[index]}
+                    id={`default-${currency}`}
                 />
                 </div>
-            ))}
+
             </Form>
             </td>
             <td>{currency.currency}</td>

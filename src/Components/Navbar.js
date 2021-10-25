@@ -24,7 +24,7 @@ const Nav = ({userName, userSurname, Logout, userWorth, loggedIn}) => {
                     (loggedIn) ?
                     <div>
                         <Navbar.Text id="navbarWorth">
-                        Total Worth: ${userWorth}
+                        USD: ${userWorth}
                         </Navbar.Text>
                     </div>
                     :
