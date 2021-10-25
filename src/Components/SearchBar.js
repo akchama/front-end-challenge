@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import "./SearchBar.css";
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import { Modal, Button, Table, Form, ButtonGroup } from 'react-bootstrap';
+import { Modal, Button, Table, Form, ButtonGroup, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
-function SearchBar({ placeholder, data , userSearchBar}) {
+function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userWorth }) {
 
     const [exchangeCurrency, setExchangeCurrency] = useState({});
     const [selectedCurrency, setSelectedCurrency] = useState("");
@@ -14,6 +14,7 @@ function SearchBar({ placeholder, data , userSearchBar}) {
 	const [show, setShow] = useState(false);
     const [amount, setAmount] = useState("");
     const [currencies, setCurrencies] = useState([])
+    const [lastUpdate, setLastUpdate] = useState("")
 
     var config = {
         method: 'get',
@@ -29,7 +30,24 @@ function SearchBar({ placeholder, data , userSearchBar}) {
             .catch(function (error) {
                 console.log(error);
             });
+        setInterval(updateData, 2 * 60 * 1000)
+        setLastUpdate(new Date().toString());
     }, [])
+
+    const updateData = async () => {
+        try {
+            axios(config)
+            .then(function (response) {
+                setExchangeCurrency(response.data.conversion_rates)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+            setLastUpdate(new Date().toString());
+       } catch (e) {
+           console.log(e);
+       }
+     }
 
     const handleFilter = (event) => {
         const searchWord = event.target.value;
@@ -61,9 +79,19 @@ function SearchBar({ placeholder, data , userSearchBar}) {
     }
 
     const handleExchange = () => {
-        setCurrencies(oldArray => oldArray.find(({ currency }) => currency === selectedCurrency) ? 
-            oldArray :  [...oldArray, {currency: selectedCurrency, acronym: selectedCurrency, amount: (Math.round(parseInt(amount) * exchangeCurrency[selectedCurrency.toString()]))}]
+        setCurrencies(oldArray => oldArray.find(({ currency }) => (currency === selectedCurrency || amount > userWorth)) ? 
+            oldArray :  [...oldArray, {currency: selectedCurrency, acronym: selectedCurrency, amount: Math.round(parseInt(amount))}]
         );
+        handleWorth((Math.round(parseInt(amount) / exchangeCurrency[selectedCurrency.toString()])));
+        console.log(userWorth + " " + amount)
+    }
+
+    const handleBuy = () => {
+        
+    }
+
+    const handleSell = () => {
+
     }
 
     const renderCurrency = (currency, index) => {
@@ -86,8 +114,8 @@ function SearchBar({ placeholder, data , userSearchBar}) {
             <td>{currency.amount}</td>
             <td>
             <ButtonGroup aria-label="Basic example">
-                <Button variant="success">Buy</Button>
-                <Button variant="danger">Sell</Button>
+                <Button onClick={handleBuy} variant="success">Buy</Button>
+                <Button onClick={handleSell} variant="danger">Sell</Button>
             </ButtonGroup>
             </td>
             </tr>
@@ -128,6 +156,9 @@ function SearchBar({ placeholder, data , userSearchBar}) {
                     <Modal.Body>
                         Amount: <input type="text" className="form-control" onChange={(e) => setAmount(e.target.value)} placeholder="Amount..."/>
                     </Modal.Body>
+                    <Modal.Body>
+                        {(insufficientBalance &&   <Alert variant={'warning'}>Insufficient balance!</Alert>)}
+                    </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
@@ -153,6 +184,7 @@ function SearchBar({ placeholder, data , userSearchBar}) {
                     {currencies.map(renderCurrency)}
                 </tbody>
             </Table>
+            <p>Last udpated: {lastUpdate} </p>
         </div>
     )
 }

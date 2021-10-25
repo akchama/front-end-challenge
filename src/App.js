@@ -15,6 +15,8 @@ function App() {
 		return true;
 	});
 
+	const [insufficientBalance, setInsufficientBalance] = useState(false);
+
 	const [user, setUser] = useState(() => {
 		const savedName = localStorage.getItem("name");
 		const initValueName = JSON.parse(savedName);
@@ -47,13 +49,20 @@ function App() {
 	}
 
 	const WorthHandler = (e) => {
-		setUser({...user, worth: user.worth - e.target.value})
+		let newWorth = user.worth - e;
+		if (newWorth < 0) {
+			setInsufficientBalance(true)
+		}
+		else {
+			setUser({...user, worth: newWorth})
+			localStorage.setItem("worth", JSON.stringify(newWorth))
+		}
 	}
 
 	return (
 		<div className="App">
 			<Nav userName={user.name} userSurname={user.surname} Logout={(e) => LogoutHandler(e)} userWorth={user.worth} loggedIn={login}/>
-			{(user.name != null && login) ? <Home /> : <LoginForm Login={Login}/>}
+			{(user.name != null && login) ? <Home handleWorth={WorthHandler} checkBalance={insufficientBalance} userWorth={user.worth}/> : <LoginForm Login={Login}/>}
 		</div>
 	);
 }

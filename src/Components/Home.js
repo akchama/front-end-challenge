@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../App.css';
 import { Route, Redirect } from 'react-router-dom';
 
-const Home = () => {
+const Home = (props) => {
 
     const [currencyOptions, setCurrencyOptions] = useState([])
     const [loggedIn, setLoggedIn] = useState(true);
@@ -30,7 +30,7 @@ const Home = () => {
     if (loggedIn) {
         return (
             <div id="searchbar">
-                <SearchBar placeholder="Start typing a currency..." data={currencyOptions}/>
+                <SearchBar placeholder="Start typing a currency..." data={currencyOptions} handleWorth={props.handleWorth} insufficientBalance={props.checkBalance} userWorth={props.userWorth}/>
             </div>
         )
     }
