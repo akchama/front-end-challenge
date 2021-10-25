@@ -55,10 +55,8 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     const handleFilter = (event) => {
         const searchWord = event.target.value;
         setWordEntered(searchWord);
-        var newArr = data.map(function(el) { return el[0]; });
-        // console.log(newArr)
-        const newFilter = newArr.filter((value) => {
-            return value.toLowerCase().includes(searchWord.toLowerCase());
+        const newFilter = data.filter((element) => {
+            return element[0].toLowerCase().includes(searchWord.toLowerCase());
         })
         if (searchWord === "") {
             setFilteredData([]);
@@ -78,14 +76,14 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
         setShow(true);
         setSelectedCurrency(value);
         // console.log(selectedCurrency);
-        console.log(exchangeCurrency[selectedCurrency.toString()]);
+        console.log(exchangeCurrency[selectedCurrency[0]]);
     }
 
     const handleExchange = () => {
-        setCurrencies(oldArray => oldArray.find(({ currency }) => (currency === selectedCurrency || amount > userWorth)) ? 
-            oldArray :  [...oldArray, {currency: selectedCurrency, acronym: selectedCurrency, amount: Math.round(parseInt(amount))}]
+        setCurrencies(oldArray => oldArray.find(({ currency }) => (currency === selectedCurrency[0] || amount > userWorth)) ? 
+            oldArray :  [...oldArray, {currency: selectedCurrency[0], acronym: selectedCurrency[1], amount: Math.round(parseInt(amount))}]
         );
-        handleWorth((Math.round(parseInt(amount) / exchangeCurrency[selectedCurrency.toString()])));
+        handleWorth((Math.round(parseInt(amount) / exchangeCurrency[selectedCurrency[0]])));
         console.log(userWorth + " " + amount)
     }
 
@@ -151,7 +149,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
                     <div className="dataResult">
                     {
                         filteredData.slice(0, 4).map((value, key) => {
-                            return <a className="dataItem" href={value.link} target="_blank" onClick={() => handleShow(value)}> {value} </a>;
+                            return <a className="dataItem" href={value.link} target="_blank" onClick={() => handleShow(value)}> &nbsp;&nbsp;&nbsp;<div>{value[0] + " - " + value[1]}</div> </a>;
                         })
                     }
                     </div>)
@@ -162,8 +160,8 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
                 <Modal.Header closeButton>
                     <Modal.Title>Exchange currency</Modal.Title>
                 </Modal.Header>
-                    <Modal.Body>From USD to {selectedCurrency}</Modal.Body>
-                    <Modal.Body>Rate: {exchangeCurrency[selectedCurrency.toString()]} </Modal.Body>
+                    <Modal.Body>From USD to {selectedCurrency[0]}</Modal.Body>
+                    <Modal.Body>Rate: {selectedCurrency && Math.round(exchangeCurrency[selectedCurrency[0]] * 100) / 100 } </Modal.Body>
                     <Modal.Body>
                         Amount: <input type="text" className="form-control" onChange={(e) => setAmount(e.target.value)} placeholder="Amount..."/>
                     </Modal.Body>
