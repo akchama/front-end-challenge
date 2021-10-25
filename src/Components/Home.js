@@ -13,7 +13,7 @@ const Home = (props) => {
   
     var config = {
       method: 'get',
-      url: 'https://v6.exchangerate-api.com/v6/e3fd651f3e38d8ee70be0677/codes',
+      url: 'https://v6.exchangerate-api.com/v6/9d31b8ac59a969880555742f/codes',
       headers: { }
     };
 

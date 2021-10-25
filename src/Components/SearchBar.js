@@ -21,7 +21,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
 
     var config = {
         method: 'get',
-        url: 'https://v6.exchangerate-api.com/v6/e3fd651f3e38d8ee70be0677/latest/USD',
+        url: 'https://v6.exchangerate-api.com/v6/9d31b8ac59a969880555742f/latest/USD',
         headers: { }
       };
 
@@ -56,7 +56,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
         const searchWord = event.target.value;
         setWordEntered(searchWord);
         var newArr = data.map(function(el) { return el[0]; });
-        console.log(newArr)
+        // console.log(newArr)
         const newFilter = newArr.filter((value) => {
             return value.toLowerCase().includes(searchWord.toLowerCase());
         })
@@ -77,7 +77,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     const handleShow = (value) => {
         setShow(true);
         setSelectedCurrency(value);
-        console.log(selectedCurrency);
+        // console.log(selectedCurrency);
         console.log(exchangeCurrency[selectedCurrency.toString()]);
     }
 
