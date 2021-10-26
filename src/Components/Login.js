@@ -1,5 +1,7 @@
 import '../App.css';
 import { useState, useEffect } from 'react';
+import { Form, Row, Col, Button } from 'react-bootstrap';
+import './Login.css'
 
 const LoginForm = ({Login}) => {
 
@@ -12,7 +14,7 @@ const LoginForm = ({Login}) => {
     return (
         <div className="container">
             <div id="login-row" className="row justify-content-center align-items-center">
-                <div className="col-sm-3">
+                <div className="justify-content-center align-items-center">
                     <form onSubmit={handleLogin}>
                         <h3>SignIn</h3>
                         <div className="form-group">
@@ -25,11 +27,12 @@ const LoginForm = ({Login}) => {
                             <input type="text" className="form-control" placeholder="Enter your surname..." onChange={(event) => setDetails({...details, surname: event.target.value})} value={details.surname}/>
                         </div>
 
-                        <button type="submit" className="btn btn-dark btn-lg btn-block">Register</button>
+                        <button type="submit" className="btn btn-dark btn-lg btn-block register">Register</button>
                     </form>
                 </div>
             </div>
         </div>
+        
     )
 }
 

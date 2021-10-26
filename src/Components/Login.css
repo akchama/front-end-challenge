@@ -1,0 +1,15 @@
+.form-group {
+    margin-top: 5%;
+}
+
+#login-row {
+    margin-top: 2vw;
+    border-radius: 15px;
+    background: #e4e4e4;
+    width: 20vw;
+}
+
+.register {
+    margin-top: .5vw;
+    margin-bottom: .5vw;
+}
