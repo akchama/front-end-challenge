@@ -48,14 +48,15 @@ function App() {
 		setLogin(false);
 	}
 
-	const WorthHandler = (e) => {
+	const WorthHandler = (e, currentCurrency, selectedCurrency, amount) => {
 		let newWorth = user.worth - e;
 		if (newWorth < 0) {
 			setInsufficientBalance(true)
 		}
 		else {
-			setUser({...user, worth: newWorth})
+			setUser({...user, worth: newWorth, [selectedCurrency]: amount})
 			localStorage.setItem("worth", JSON.stringify(newWorth))
+			console.log("TL: " + user.TRY)
 		}
 	}
 

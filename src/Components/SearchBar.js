@@ -9,6 +9,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
 
     const [exchangeCurrency, setExchangeCurrency] = useState({});
     const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [currentCurrency, setCurrentCurrency] = useState("USD");
     const [filteredData, setFilteredData] = useState([]); 
     const [wordEntered, setWordEntered] = useState("");
 	const [show, setShow] = useState(false);
@@ -18,6 +19,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     const [checkedState, setCheckedState] = useState(
         new Array(currencies.length).fill(false)
       );
+    const [tableCurrency, setTableCurrency] = useState([])
 
     var config = {
         method: 'get',
@@ -83,7 +85,7 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
         setCurrencies(oldArray => oldArray.find(({ currency }) => (currency === selectedCurrency[0] || amount > userWorth)) ? 
             oldArray :  [...oldArray, {currency: selectedCurrency[0], acronym: selectedCurrency[1], amount: Math.round(parseInt(amount))}]
         );
-        handleWorth((Math.round(parseInt(amount) / exchangeCurrency[selectedCurrency[0]])));
+        handleWorth(Math.round(parseInt(amount) / exchangeCurrency[selectedCurrency[0]]), currentCurrency, selectedCurrency[0], amount);
         console.log(userWorth + " " + amount)
     }
 
@@ -95,10 +97,14 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
 
     }
 
+    // TODO: Bu kısımda bir checkbox işaretlendiğinde diğer checkbox'ların girdileri silinmesi gerekiyor
     const handleOnChange = (index) => {
-        setCheckedState(
-            new Array(currencies.length).fill(false)
-          );
+        setCheckedState(() => {
+            let array = new Array(currencies.length)
+            let cloneArray = array.slice();
+            cloneArray.splice(index, 1);
+            return cloneArray.fill(false);
+        });
     }
 
     const renderCurrency = (currency, index) => {
@@ -123,8 +129,8 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
             <td>{currency.amount}</td>
             <td>
             <ButtonGroup aria-label="Basic example">
-                <Button onClick={handleBuy} variant="success">Buy</Button>
-                <Button onClick={handleSell} variant="danger">Sell</Button>
+                <Button onClick={() => handleShow(selectedCurrency)} variant="success">Buy</Button>
+                <Button onClick={() => handleShow(selectedCurrency)} variant="danger">Sell</Button>
             </ButtonGroup>
             </td>
             </tr>
