@@ -16,10 +16,9 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     const [amount, setAmount] = useState("");
     const [currencies, setCurrencies] = useState([])
     const [lastUpdate, setLastUpdate] = useState("")
-    const [checkedState, setCheckedState] = useState(
-        new Array(currencies.length).fill(false)
-      );
-    const [tableCurrency, setTableCurrency] = useState([])
+    const [showBuy, setShowBuy] = useState(false)
+    const [buyCurrency, setBuyCurrency] = useState("");
+    const [buyCurrencyAmount, setBuyCurrencyAmount] = useState(0);
 
     var config = {
         method: 'get',
@@ -73,7 +72,10 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
         setWordEntered("");
     }
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setShowBuy(false)
+    }
     const handleShow = (value) => {
         setShow(true);
         setSelectedCurrency(value);
@@ -89,8 +91,22 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
         console.log(userWorth + " " + amount)
     }
 
-    const handleBuy = () => {
-        
+    const handleBuy = (e, item) => {
+        let tempList = currencies;
+        tempList.map((currency) => {
+          if (currency === item) {
+            // console.log(e.target.id)
+            // console.log(currency)
+            // console.log(item)
+            setBuyCurrency(currency.currency)
+            setShowBuy(true)
+            setBuyCurrencyAmount()
+          }
+          else {
+            currency.selected = false;
+          }
+          return currency;
+        });
     }
 
     const handleSell = () => {
@@ -98,14 +114,19 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
     }
 
     // TODO: Bu kısımda bir checkbox işaretlendiğinde diğer checkbox'ların girdileri silinmesi gerekiyor
-    const handleOnChange = (index) => {
-        setCheckedState(() => {
-            let array = new Array(currencies.length)
-            let cloneArray = array.slice();
-            cloneArray.splice(index, 1);
-            return cloneArray.fill(false);
-        });
-    }
+    const handleOnChange = (e, item) => {
+        let tempList = currencies;
+        tempList.map((currency) => {
+          if (currency === item) {
+            currency.selected = e.target.checked;
+            console.log(e.target.checked)
+          }
+          else {
+            currency.selected = false;
+          }
+          return currency;
+        }
+    )};
 
     const renderCurrency = (currency, index) => {
         return (
@@ -115,9 +136,9 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
                 <div key={`default-${currency}`} className="mb-3">
                 <Form.Check
                     className="currencyCheckBox"
-                    onChange={() => handleOnChange(index)}
+                    onChange={(e) => handleOnChange(e, currency)}
                     type='checkbox'
-                    checked={checkedState[index]}
+                    checked={currency.selected}
                     id={`default-${currency}`}
                 />
                 </div>
@@ -126,10 +147,10 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
             </td>
             <td>{currency.currency}</td>
             <td>{currency.acronym}</td>
-            <td>{currency.amount}</td>
+            <td>{parseInt(currency.amount)}</td>
             <td>
             <ButtonGroup aria-label="Basic example">
-                <Button onClick={() => handleShow(selectedCurrency)} variant="success">Buy</Button>
+                <Button onClick={(e) => handleBuy(e, currency)} variant="success">Buy</Button>
                 <Button onClick={() => handleShow(selectedCurrency)} variant="danger">Sell</Button>
             </ButtonGroup>
             </td>
@@ -180,6 +201,28 @@ function SearchBar({ placeholder, data , handleWorth, insufficientBalance, userW
                 </Button>
                 <Button variant="primary" onClick={handleExchange}>
                     Exchange
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showBuy} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Buy currency</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>Buy {buyCurrency} from USD</Modal.Body>
+                    <Modal.Body>Rate: {selectedCurrency && Math.round(exchangeCurrency[selectedCurrency[0]] * 100) / 100 } </Modal.Body>
+                    <Modal.Body>
+                        Amount: <input type="text" className="form-control" onChange={(e) => setAmount(e.target.value)} placeholder="Amount..."/>
+                    </Modal.Body>
+                    <Modal.Body>
+                        {(insufficientBalance &&   <Alert variant={'warning'}>Insufficient balance!</Alert>)}
+                    </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleExchange}>
+                    Buy
                 </Button>
                 </Modal.Footer>
             </Modal>
